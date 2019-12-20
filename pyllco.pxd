@@ -19,6 +19,3 @@ cdef class Module:
 # TODO: change that
 cdef class Value:
     cdef ir.Value* _val
-
-
-cdef get_obj(ir.Value* val)

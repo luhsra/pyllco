@@ -115,7 +115,7 @@ cdef class GlobalVariable(Constant):
     pass
 
 
-cdef get_obj(ir.Value* val):
+cdef public object get_obj(ir.Value* val):
     c = get_subclass(val)
     print(c)
     print(globals())
