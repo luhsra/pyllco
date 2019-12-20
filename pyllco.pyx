@@ -116,6 +116,10 @@ cdef class GlobalVariable(Constant):
 
 
 cdef public object get_obj(ir.Value* val):
-    c = get_subclass(val)
-    print(c)
-    print(globals())
+    c = get_subclass(val).decode('UTF-8')
+    cdef Value py_val
+    if c in globals():
+        py_val = globals()[c]()
+        py_val._val = val
+        return py_val
+    assert False, "Pyllco is incomplete. It should never reach this state."

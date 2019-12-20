@@ -1,13 +1,14 @@
 #pragma once
 
-#include <llvm/IR/Value.h>
 #include <exception>
+#include <iostream>
+#include <llvm/IR/Value.h>
+#include <memory>
 #include <string>
 #include <variant>
-#include <memory>
 
 namespace pyllco {
-	template<class T>
+	template <class T>
 	T* get(llvm::Value* c) {
 		if (T* r = llvm::dyn_cast<T>(c)) {
 			return r;
@@ -17,9 +18,7 @@ namespace pyllco {
 	}
 
 	/**
-	 * Return the actual Subclass of Value as String. Since LLVM uses its own homegrown kind of RTTI this is kind of complicated.
+	 * Return the actual subclass of llvm::Value as std::string.
 	 */
-	std::string get_subclass(llvm::Value* v) {
-		return "foobar";
-	}
-}
+	std::string get_subclass(llvm::Value* v);
+} // namespace pyllco
