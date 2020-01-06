@@ -8,6 +8,11 @@ from pyllco_helper cimport get, get_subclass
 from libcpp.memory cimport unique_ptr
 
 
+cdef class Value:
+    def get_name(self):
+        return self._val.getName().str().decode('UTF-8')
+
+
 cdef class User(Value):
     cdef inline ir.User* _user(self):
         return get[ir.User](self._val)
