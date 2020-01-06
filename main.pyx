@@ -3,9 +3,36 @@
 
 cimport pyllco
 cimport ir
+cimport attr_kind
 
 from pyllco_helper cimport get, get_subclass
 from libcpp.memory cimport unique_ptr
+from libcpp.string cimport string
+from cython.operator cimport dereference as deref
+
+#include "attr_kind.pyx"
+
+cdef class AttributeSet():
+    cdef inline _has_attribute_str(self, attr):
+        cdef string a = attr.encode('UTF-8')
+        return self._set.hasAttribute(a)
+
+    cdef inline _has_attribute_attr(self, int attr):
+        cdef attr_kind.AttrKind a = <attr_kind.AttrKind> attr
+        return self._set.hasAttribute(a)
+
+    def has_attribute(self, attr):
+        if isinstance(attr, str):
+            return self._has_attribute_str(attr)
+        if isinstance(attr, AttrKind):
+            return self._has_attribute_attr(attr)
+        return False
+
+
+cdef public object get_obj_from_attr_set(ir.AttributeSet& s):
+    cdef AttributeSet attrs = AttributeSet()
+    attrs._set = s
+    return attrs
 
 
 cdef class Value:
@@ -21,6 +48,9 @@ cdef class User(Value):
 cdef class Constant(User):
     cdef inline ir.Constant* _constant(self):
         return get[ir.Constant](self._val)
+
+    def get(self, AttributeSet attrs=None):
+        raise NotImplementedError("Type cannot return a Python value")
 
 
 cdef class BlockAddress(Constant):
@@ -53,34 +83,61 @@ cdef class ConstantAggregateZero(Constant):
 
 
 cdef class ConstantDataSequential(Constant):
+    cdef inline ir.ConstantDataSequential* _cds(self):
+        return get[ir.ConstantDataSequential](self._val)
+
+    def get_as_c_string(self):
+        return deref(self._cds()).getAsCString().str().decode('UTF-8')
+
+    def get(self, AttributeSet attrs=None):
+        return self.get_as_c_string()
+
+cdef class ConstantDataArray(ConstantDataSequential):
+
     pass
 
 
-cdef class ConstantDataArray(Constant):
+cdef class ConstantDataVector(ConstantDataSequential):
     pass
 
 
-cdef class ConstantDataVector(Constant):
+cdef class ConstantFP(ConstantData):
     pass
 
 
-cdef class ConstantFP(Constant):
+cdef class ConstantInt(ConstantData):
+    cdef inline ir.ConstantInt* _constant_int(self):
+        return get[ir.ConstantInt](self._val)
+
+    def get_bit_width(self):
+        return deref(self._constant_int()).getBitWidth()
+
+    def get_s_ext_value(self):
+        return deref(self._constant_int()).getSExtValue()
+
+    def get_z_ext_value(self):
+        return deref(self._constant_int()).getZExtValue()
+
+    def is_negative(self):
+        return deref(self._constant_int()).isNegative()
+
+    def get(self, AttributeSet attrs=None):
+        if attrs and attrs.has_attribute(AttrKind.ZExt):
+            return self.get_z_ext_value()
+        else:
+            return self.get_s_ext_value()
+
+
+cdef class ConstantPointerNull(ConstantData):
+    def get(self, AttributeSet attrs=None):
+        return 0
+
+
+cdef class ConstantTokenNone(ConstantData):
     pass
 
 
-cdef class ConstantInt(Constant):
-    pass
-
-
-cdef class ConstantPointerNull(Constant):
-    pass
-
-
-cdef class ConstantTokenNone(Constant):
-    pass
-
-
-cdef class UndefValue(Constant):
+cdef class UndefValue(ConstantData):
     pass
 
 
@@ -113,14 +170,15 @@ cdef class GlobalObject(Constant):
 
 
 cdef class Function(Constant):
-    pass
+    cdef inline ir.Function* _function(self):
+        return get[ir.Function](self._val)
 
 
 cdef class GlobalVariable(Constant):
     pass
 
 
-cdef public object get_obj(ir.Value* val):
+cdef public object get_obj_from_value(ir.Value* val):
     c = get_subclass(val).decode('UTF-8')
     cdef Value py_val
     if c in globals():

@@ -19,3 +19,10 @@ cdef class Module:
 # TODO: change that
 cdef class Value:
     cdef ir.Value* _val
+
+cdef class AttributeSet:
+    cdef ir.AttributeSet _set
+
+    # internal helper functions, do not use
+    cdef inline _has_attribute_str(self, attr)
+    cdef inline _has_attribute_attr(self, int attr)

@@ -27,3 +27,21 @@ cdef extern from "llvm/IR/Constant.h" namespace "llvm":
 cdef extern from "llvm/IR/Constants.h" namespace "llvm":
     cdef cppclass BlockAddress:
         pass
+
+    cdef cppclass ConstantDataSequential:
+        adt.StringRef getAsCString()
+
+    cdef cppclass ConstantInt:
+        unsigned getBitWidth()
+        uint64_t getZExtValue()
+        int64_t getSExtValue()
+        bool isNegative()
+
+cdef extern from "llvm/IR/Function.h" namespace "llvm":
+    cdef cppclass Function:
+        pass
+
+cdef extern from "llvm/IR/Attributes.h" namespace "llvm":
+    cdef cppclass AttributeSet:
+        bool hasAttribute(string)
+        bool hasAttribute(attr_kind.AttrKind)

@@ -6,7 +6,9 @@ project('pyllco', 'cpp',
 
 add_project_arguments('-Werror=return-type', language: ['c', 'cpp'])
 
+# dependencies and external stuff
 cp = find_program('cp')
+# cpp = find_program('cpp')
 
 cython = find_program('cython')
 cython_flags = ['-Wextra', '--cplus', '-3', '--cimport-from-pyx']
@@ -17,18 +19,46 @@ py3_inst = py3_mod.find_installation('python3')
 llvm_version = ['>=9', '<10']
 llvm_dep = dependency('llvm', version: llvm_version, include_type: 'system')
 
-headers = ['pyllco_helper.h', 'pyllco_helper.pxd', 'ir.pxd', 'pyllco.pxd']
+# build process has several steps:
+# 1. generate attr_kind.{pyx, pxd} with gen_attr_kind.py
+#     - not possible with meson right now, therefore skipping and making it manually
+# 2. combine all pyx files to one large with cypp.py
+# 3. compile the pyx file to a cpp file with cython
+# 4. compile the cpp file to a python module with gcc
 
-py_modules = py3_inst.get_path('purelib')
+# step 1
+# attr_kind = custom_target('attr_kind',
+#     output: ['attr_kind.pyx', 'attr_kind.pxd'],
+#     input: ['gen_attr_kind.py'], # not actually an input but a dependency
+#     command: [py3_inst, '@INPUT@', '-I', llvm_dep.include, '--cpp', cpp.path(), '--outdir', '@OUTDIR@']
+# )
 
-pyllco_pyx_cpp = custom_target('pyllco',
-    output: ['pyllco_pyx.cpp', 'pyllco_pyx.h'],
-    input: ['pyllco.pyx'] + headers,
-    command: [cython, '--capi-reexport-cincludes', '@INPUT0@', '-o', '@OUTPUT0@'] + cython_flags,
+# step 2
+cython_sources = ['main.pyx', 'attr_kind.pyx', 'attr_kind.pxd']
+
+source_dir = meson.current_source_dir()
+combined_pyx = custom_target('pyllco_pyx',
+    output: ['pyllco.pyx'],
+    input: ['cypp.py'] + cython_sources, # not actually an input but a dependency
+    command: [py3_inst, '@INPUT0@', '-I', source_dir, '-o', '@OUTPUT@', '@INPUT1@']
 )
 
-pyllco_source_files = files('pyllco_helper.cpp')
+headers = ['attr_kind.pxd',
+           'ir.pxd',
+           'pyllco.pxd',
+           'pyllco_helper.h',
+           'pyllco_helper.pxd']
 
+# step 3
+pyllco_pyx_cpp = custom_target('pyllco',
+    output: ['pyllco_pyx.cpp', 'pyllco_pyx.h'],
+    input: [combined_pyx] + headers,
+    command: [cython, '--capi-reexport-cincludes', '-I', source_dir, '@INPUT0@', '-o', '@OUTPUT0@'] + cython_flags,
+)
+
+# step 4
+pyllco_source_files = files('pyllco_helper.cpp')
+py_modules = py3_inst.get_path('purelib')
 pyllco = py3_inst.extension_module('pyllco',
     [pyllco_pyx_cpp] + pyllco_source_files,
     install: true,
