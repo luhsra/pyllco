@@ -12,6 +12,9 @@ from cython.operator cimport dereference as deref
 
 #include "attr_kind.pyx"
 
+class InvalidValue(Exception):
+    pass
+
 cdef class AttributeSet():
     cdef inline _has_attribute_str(self, attr):
         cdef string a = attr.encode('UTF-8')
@@ -134,7 +137,8 @@ cdef class ConstantPointerNull(ConstantData):
 
 
 cdef class ConstantTokenNone(ConstantData):
-    pass
+    def get(self, AttributeSet attrs=None):
+        raise InvalidValue("Constant has no value.")
 
 
 cdef class UndefValue(ConstantData):
