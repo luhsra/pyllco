@@ -9,3 +9,4 @@ from libcpp.memory cimport unique_ptr
 cdef extern from "pyllco_helper.h" namespace "pyllco":
     T* get[T](Value*)
     string get_subclass(Value*)
+    string to_string[T](T&)

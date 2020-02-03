@@ -5,7 +5,7 @@ cimport pyllco
 cimport ir
 cimport attr_kind
 
-from pyllco_helper cimport get, get_subclass
+from pyllco_helper cimport get, get_subclass, to_string
 from libcpp.memory cimport unique_ptr
 from libcpp.string cimport string
 from cython.operator cimport dereference as deref
@@ -41,6 +41,9 @@ cdef public object get_obj_from_attr_set(ir.AttributeSet& s):
 cdef class Value:
     def get_name(self):
         return self._val.getName().str().decode('UTF-8')
+
+    def __str__(self):
+        return to_string[ir.Value](deref(self._val)).decode('UTF-8')
 
 
 cdef class User(Value):
