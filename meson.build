@@ -40,7 +40,7 @@ source_dir = meson.current_source_dir()
 combined_pyx = custom_target('pyllco_pyx',
     output: 'pyllco.pyx',
     input: ['cypp.py', 'main.pyx'],
-    dependency_files: cython_sources,
+    depend_files: cython_sources,
     depfile: 'pyllco.d',
     command: [py3_inst, '@INPUT0@', '-I', source_dir, '-o', '@OUTPUT@', '--depfile', '@DEPFILE@', '@INPUT1@']
 )
