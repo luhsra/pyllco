@@ -34,13 +34,15 @@ llvm_dep = dependency('llvm', version: llvm_version, include_type: 'system')
 # )
 
 # step 2
-cython_sources = ['main.pyx', 'attr_kind.pyx', 'attr_kind.pxd']
+cython_sources = ['attr_kind.pxd', 'ir.pxd']
 
 source_dir = meson.current_source_dir()
 combined_pyx = custom_target('pyllco_pyx',
-    output: ['pyllco.pyx'],
-    input: ['cypp.py'] + cython_sources, # not actually an input but a dependency
-    command: [py3_inst, '@INPUT0@', '-I', source_dir, '-o', '@OUTPUT@', '@INPUT1@']
+    output: 'pyllco.pyx',
+    input: ['cypp.py', 'main.pyx'],
+    dependency_files: cython_sources,
+    depfile: 'pyllco.d',
+    command: [py3_inst, '@INPUT0@', '-I', source_dir, '-o', '@OUTPUT@', '--depfile', '@DEPFILE@', '@INPUT1@']
 )
 
 headers = ['attr_kind.pxd',
