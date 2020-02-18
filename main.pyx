@@ -51,7 +51,7 @@ cdef class User(Value):
         return get[ir.User](self._val)
 
 #include "constants.pyx"
-
+#include "instructions.pyx"
 
 cdef public object get_obj_from_value(ir.Value* val):
     c = get_subclass(val).decode('UTF-8')
