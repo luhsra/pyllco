@@ -75,11 +75,12 @@ class LineProcessor:
 class Interpreter:
     """Interprets one line."""
 
-    def __init__(self, line_p, include):
-        """Intitialize with a LineProcessor."""
+    def __init__(self, line_p, include, depfile):
+        """Initialize with a LineProcessor."""
         self._line_p = line_p
         self._file_cache = set()
         self._includes = ['.'] + include
+        self._depfile = depfile
 
     def _find_file(self, file):
         """Try to find files to include, check therefore all include paths,
@@ -98,6 +99,7 @@ class Interpreter:
             path = self._find_file(new_file)
             if path not in self._file_cache:
                 self._line_p.push(open(path, 'rb'))
+                self._depfile.write(path)
         else:
             raise ParseException(f"#include directive incorrect: {line}")
 
@@ -117,6 +119,19 @@ class Interpreter:
         return line
 
 
+class DepfileWriter:
+    """Produces a make/ninja compatible depfile."""
+    def __init__(self, file, output):
+        self._file = file
+        if self._file:
+            self._file.write(output + ':')
+
+    def write(self, path):
+        """Write a new path into file."""
+        if self._file:
+            self._file.write(' ' + str(path))
+
+
 def main():
     """Entry function."""
     parser = argparse.ArgumentParser(
@@ -128,15 +143,17 @@ def main():
                         default=sys.stdout.buffer)
     parser.add_argument('--include', '-I', action='append', default=[],
                         help='list of include path')
+    parser.add_argument('--depfile', '-d', help='write a dependency file',
+                        type=argparse.FileType('w'))
     parser.add_argument('INPUT', help="input file (type - for STDIN)")
 
     args = parser.parse_args()
-    print(args)
 
     line_p = LineProcessor()
     line_p.push(args.INPUT)
 
-    ip = Interpreter(line_p, args.include)
+    ip = Interpreter(line_p, args.include,
+                     DepfileWriter(args.depfile, args.output.name))
 
     for line in line_p:
         args.output.write(ip.interpret(line))
