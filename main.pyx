@@ -60,4 +60,4 @@ cdef public object get_obj_from_value(ir.Value& val):
         py_val = globals()[c]()
         py_val._val = &val
         return py_val
-    assert False, "Pyllco is incomplete. It should never reach this state."
+    assert False, f"Unreachable state. Subclass = {c}"
