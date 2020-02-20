@@ -102,5 +102,62 @@ cdef class SwitchInst(Instruction):
 cdef class UnaryInstruction(Instruction):
     pass
 
+cdef class AllocaInst(Instruction):
+    pass
+
+cdef class CastInst(Instruction):
+    pass
+
+cdef class AddrSpaceCastInst(Instruction):
+    pass
+
+cdef class BitCastInst(Instruction):
+    pass
+
+cdef class FPExtInst(Instruction):
+    pass
+
+cdef class FPToSIInst(Instruction):
+    pass
+
+cdef class FPToUIInst(Instruction):
+    pass
+
+cdef class FPTruncInst(Instruction):
+    pass
+
+cdef class IntToPtrInst(Instruction):
+    pass
+
+cdef class PtrToIntInst(Instruction):
+    pass
+
+cdef class SExtInst(Instruction):
+    pass
+
+cdef class SIToFPInst(Instruction):
+    pass
+
+cdef class TruncInst(Instruction):
+    pass
+
+cdef class UIToFPInst(Instruction):
+    pass
+
+cdef class ZExtInst(Instruction):
+    pass
+
+cdef class ExtractValueInst(Instruction):
+    pass
+
+cdef class LoadInst(Instruction):
+    pass
+
+cdef class UnaryOperator(Instruction):
+    pass
+
+cdef class VAArgInst(Instruction):
+    pass
+
 cdef class UnreachableInst(Instruction):
     pass
