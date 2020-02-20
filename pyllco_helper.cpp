@@ -3,7 +3,7 @@
 #include <llvm/IR/Instruction.h>
 
 namespace pyllco {
-	std::string get_subclass(llvm::Value* v) {
+	std::string get_subclass(const llvm::Value& v) {
 		// this is getting a little big ugly but the only possibility to circumvent
 		// LLVM's strange handmade RTTI.
 		//
@@ -13,7 +13,7 @@ namespace pyllco {
 		// Unfortunately, Instructions are handled separate. The concept of one unique number per subclass is broken. It
 		// is one unique number per Opcode. This is done in another special header "Instruction.def". See
 		// "Instruction.h" and "InstVisitor.h" for its regular usage. We can use this header as well.
-		switch (v->getValueID()) {
+		switch (v.getValueID()) {
 #define HANDLE_VALUE(Name)                                                                                             \
 	case llvm::Value::Name##Val:                                                                                       \
 		return #Name;

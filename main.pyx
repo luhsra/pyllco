@@ -53,11 +53,11 @@ cdef class User(Value):
 #include "constants.pyx"
 #include "instructions.pyx"
 
-cdef public object get_obj_from_value(ir.Value* val):
+cdef public object get_obj_from_value(ir.Value& val):
     c = get_subclass(val).decode('UTF-8')
     cdef Value py_val
     if c in globals():
         py_val = globals()[c]()
-        py_val._val = val
+        py_val._val = &val
         return py_val
     assert False, "Pyllco is incomplete. It should never reach this state."

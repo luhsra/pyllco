@@ -21,7 +21,7 @@ namespace pyllco {
 	/**
 	 * Return the actual subclass of llvm::Value as std::string.
 	 */
-	std::string get_subclass(llvm::Value* v);
+	std::string get_subclass(const llvm::Value& v);
 
 	/**
 	 * return output to llvm stream as string
