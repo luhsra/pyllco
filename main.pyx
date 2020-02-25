@@ -9,6 +9,7 @@ from pyllco_helper cimport get, get_subclass, to_string
 from libcpp.memory cimport unique_ptr
 from libcpp.string cimport string
 from cython.operator cimport dereference as deref
+from libc.stdint cimport intptr_t
 
 #include "attr_kind.pyx"
 
@@ -44,6 +45,12 @@ cdef class Value:
 
     def __str__(self):
         return to_string[ir.Value](deref(self._val)).decode('UTF-8')
+
+    def __hash__(self):
+        return hash("pyllco.Value") + int(<intptr_t> self._val)
+
+    def __eq__(self, Value other):
+        return self._val == other._val
 
 
 cdef class User(Value):
