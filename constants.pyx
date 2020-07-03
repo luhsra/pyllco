@@ -86,6 +86,9 @@ cdef class ConstantInt(ConstantData):
         else:
             return self.get_s_ext_value()
 
+    def __int__(self):
+        return self.get()
+
 
 cdef class ConstantPointerNull(ConstantData):
     def get(self, AttributeSet attrs=None):
