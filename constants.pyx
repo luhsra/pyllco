@@ -9,7 +9,7 @@ cdef class Constant(User):
         return get[ir.Constant](self._val)
 
     def get(self, AttributeSet attrs=None):
-        raise NotImplementedError("Type cannot return a Python value")
+        raise NotImplementedError(f"Type '{self.__class__.__name__}' cannot return a Python value")
 
 
 cdef class BlockAddress(Constant):
