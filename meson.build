@@ -16,7 +16,7 @@ cython_flags = ['-Wextra', '--cplus', '-3', '--cimport-from-pyx']
 py3_mod = import('python')
 py3_inst = py3_mod.find_installation('python3')
 
-llvm_version = ['>=9', '<10']
+llvm_version = ['>=9', '<11']
 llvm_dep = dependency('llvm', version: llvm_version, include_type: 'system')
 
 # build process has several steps:
