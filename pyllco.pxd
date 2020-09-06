@@ -26,5 +26,3 @@ cdef class AttributeSet:
     # internal helper functions, do not use
     cdef inline _has_attribute_str(self, attr)
     cdef inline _has_attribute_attr(self, int attr)
-
-cdef public object get_obj_from_value(ir.Value& val)
