@@ -93,6 +93,10 @@ cdef class ConstantInt(ConstantData):
 cdef class ConstantPointerNull(ConstantData):
     def get(self, AttributeSet attrs=None):
         return 0
+    def __int__(self):
+        return 0
+    def __str__(self):
+        return "NULL"
 
 
 cdef class ConstantTokenNone(ConstantData):
