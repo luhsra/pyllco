@@ -68,3 +68,8 @@ cdef public object get_obj_from_value(ir.Value& val):
         py_val._val = &val
         return py_val
     assert False, f"Unreachable state. Subclass = {c}"
+
+
+cdef public ir.Value* get_value_from_obj(object val_o):
+    cdef Value val = val_o
+    return val._val
