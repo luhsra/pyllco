@@ -57,6 +57,7 @@ cdef class User(Value):
     cdef inline ir.User* _user(self):
         return get[ir.User](self._val)
 
+#include "argument.pyx"
 #include "constants.pyx"
 #include "instructions.pyx"
 
