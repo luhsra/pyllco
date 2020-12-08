@@ -142,5 +142,6 @@ cdef class Function(Constant):
 
 
 cdef class GlobalVariable(Constant):
-    pass
+    def get(self, AttributeSet attrs=None):
+        raise InvalidValue("GlobalVariable has no value.")
 

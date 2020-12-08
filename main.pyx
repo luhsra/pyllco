@@ -14,7 +14,7 @@ from libc.stdint cimport intptr_t
 #include "attr_kind.pyx"
 
 class InvalidValue(Exception):
-    pass
+    """LLVM value has no Python representation."""
 
 cdef class AttributeSet():
     cdef inline _has_attribute_str(self, attr):
