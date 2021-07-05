@@ -1,7 +1,5 @@
 #include "pyllco_helper.h"
 
-#include <llvm/IR/Instruction.h>
-
 namespace pyllco {
 	std::string get_subclass(const llvm::Value& v) {
 		// this is getting a little big ugly but the only possibility to circumvent
@@ -28,5 +26,16 @@ namespace pyllco {
 		assert(false);
 		// make the compiler happy
 		return "";
+	}
+
+	bool get_gep_offset(const llvm::GetElementPtrInst& gep, int64_t& offset) {
+		const auto layout = gep.getModule()->getDataLayout();
+		llvm::APInt ap_offset(layout.getIndexSizeInBits(gep.getPointerAddressSpace()), 0, true);
+		bool success = gep.accumulateConstantOffset(layout, ap_offset);
+		if (!success) {
+			return false;
+		}
+		offset = ap_offset.getSExtValue();
+		return true;
 	}
 } // namespace pyllco

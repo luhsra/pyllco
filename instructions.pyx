@@ -2,6 +2,9 @@
 # vim: set et ts=4 sw=4:
 
 cimport ir
+from pyllco_helper cimport get, get_gep_offset
+from libcpp cimport bool
+from libc.stdint cimport int64_t
 
 cdef class Instruction(User):
     pass
@@ -64,7 +67,19 @@ cdef class CatchPadInst(Instruction):
     pass
 
 cdef class GetElementPtrInst(Instruction):
-    pass
+    cdef inline ir.GetElementPtrInst* _gep_inst(self):
+        return get[ir.GetElementPtrInst](self._val)
+
+    def get_offset(self):
+        """Accumulate the constant address offset of this GEP if possible.
+
+        Python wrapper function. Return None if calculation not possible.
+        """
+        cdef int64_t offset = 0
+        cdef bool res = get_gep_offset(deref(self._gep_inst()), offset)
+        if res:
+            return offset
+        return None
 
 cdef class IndirectBrInst(Instruction):
     pass

@@ -3,6 +3,8 @@
 #include <exception>
 #include <iostream>
 #include <llvm/IR/Value.h>
+#include <llvm/IR/Instructions.h>
+#include <llvm/IR/Module.h>
 #include <llvm/Support/raw_ostream.h>
 #include <memory>
 #include <string>
@@ -34,5 +36,10 @@ namespace pyllco {
 		retsstream.str();
 		return ret;
 	}
+
+	/**
+	 * Calculate the offset of an GetElementPtrInst if possible
+	 */
+	bool get_gep_offset(const llvm::GetElementPtrInst& gep, int64_t& offset);
 
 } // namespace pyllco
