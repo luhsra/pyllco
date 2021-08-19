@@ -20,6 +20,15 @@ cdef class Module:
 cdef class Value:
     cdef ir.Value* _val
 
+cdef class User(Value):
+    cdef inline ir.User* _user(self)
+
+cdef class Instruction(User):
+    pass
+
+cdef class GetElementPtrInst(Instruction):
+    cdef inline ir.GetElementPtrInst* _gep_inst(self)
+
 cdef class AttributeSet:
     cdef ir.AttributeSet _set
 
