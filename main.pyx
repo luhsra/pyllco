@@ -53,14 +53,6 @@ cdef class Value:
         return self._val == other._val
 
 
-cdef class User(Value):
-    cdef inline ir.User* _user(self):
-        return get[ir.User](self._val)
-
-#include "argument.pyx"
-#include "constants.pyx"
-#include "instructions.pyx"
-
 cdef public object get_obj_from_value(ir.Value& val):
     c = get_subclass(val).decode('UTF-8')
     cdef Value py_val
@@ -70,6 +62,14 @@ cdef public object get_obj_from_value(ir.Value& val):
         return py_val
     assert False, f"Unreachable state. Subclass = {c}"
 
+
+cdef class User(Value):
+    cdef inline ir.User* _user(self):
+        return get[ir.User](self._val)
+
+#include "argument.pyx"
+#include "constants.pyx"
+#include "instructions.pyx"
 
 cdef public ir.Value* get_value_from_obj(object val_o):
     cdef Value val = val_o

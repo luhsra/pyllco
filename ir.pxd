@@ -37,6 +37,11 @@ cdef extern from "llvm/IR/Constants.h" namespace "llvm":
         int64_t getSExtValue()
         bool isNegative()
 
+cdef extern from "llvm/IR/GlobalVariable.h" namespace "llvm":
+    cdef cppclass GlobalVariable:
+        bool isConstant()
+        Value* getInitializer()
+
 cdef extern from "llvm/IR/Instructions.h" namespace "llvm":
     cdef cppclass GetElementPtrInst:
         pass

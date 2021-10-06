@@ -142,6 +142,19 @@ cdef class Function(Constant):
 
 
 cdef class GlobalVariable(Constant):
+    cdef inline ir.GlobalVariable* _global_variable(self):
+        return get[ir.GlobalVariable](self._val)
+
     def get(self, AttributeSet attrs=None):
         raise InvalidValue("GlobalVariable has no value.")
+
+    def is_constant(self):
+        return deref(self._global_variable()).isConstant()
+
+    def get_initializer(self):
+        cdef ir.Value* init = deref(self._global_variable()).getInitializer()
+        if init is NULL:
+            return None
+        else:
+            return get_obj_from_value(deref(init))
 
