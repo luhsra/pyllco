@@ -68,6 +68,7 @@ cdef class User(Value):
         return get[ir.User](self._val)
 
 #include "argument.pyx"
+#include "basic_block.pyx"
 #include "constants.pyx"
 #include "instructions.pyx"
 

@@ -20,6 +20,10 @@ cdef extern from "llvm/IR/User.h" namespace "llvm":
     cdef cppclass User:
         pass
 
+cdef extern from "llvm/IR/BasicBlock.h" namespace "llvm":
+    cdef cppclass BasicBlock:
+        pass
+
 cdef extern from "llvm/IR/Constant.h" namespace "llvm":
     cdef cppclass Constant:
         pass
