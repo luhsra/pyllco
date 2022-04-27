@@ -17,7 +17,7 @@ py3_mod = import('python')
 py3_inst = py3_mod.find_installation('python3')
 
 llvm_version = ['>=9', '<13']
-llvm_dep = dependency('llvm', version: llvm_version, include_type: 'system')
+llvm_dep = dependency('llvm', method: 'config-tool', version: llvm_version, include_type: 'system')
 
 # build process has several steps:
 # 1. generate attr_kind.{pyx, pxd} with gen_attr_kind.py
