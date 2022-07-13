@@ -91,6 +91,20 @@ pkg.generate(pyllco,
 pyllco_inc = include_directories('.')
 pyllco_cython_inc = meson.current_source_dir()
 pyllco_dir = meson.current_build_dir()
-pyllco_dep = declare_dependency(link_with: pyllco,
-                                sources: pyllco_pyx_header,
+
+# Attention: If you use this dependency in another Python module
+# you must consider a few settings:
+# 1. When building, you must set
+#    `override_options: 'b_lundef=false'` in the other module.
+#    With that the symbols of pyllco within the other module
+#    remain undefined.
+# 2. When using the other module, you must import pyllco first
+#    so the Python interpreter knows about its symbols.
+#    You also need to set
+#    sys.setdlopenflags(sys.getdlopenflags() | os.RTLD_GLOBAL)
+#    within the Python code so CPython resolve the pyllco
+#    symbols on a global base.
+# This is all due to the fact, that linking together shared
+# modules is not supported.
+pyllco_dep = declare_dependency(sources: pyllco_pyx_header,
                                 include_directories : pyllco_inc)
