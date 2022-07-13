@@ -74,6 +74,7 @@ pyllco_pyx_header = custom_target('pyllco_header',
     output: 'pyllco.h',
     input: pyllco_pyx_cpp[1],
     command: [cp, '@INPUT@', '@OUTPUT@'],
+    depends: pyllco,
     install: true,
     install_dir: get_option('includedir') / project_name
 )
