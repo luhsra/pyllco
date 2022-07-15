@@ -65,6 +65,7 @@ pyllco = py3_inst.extension_module('pyllco',
     [pyllco_pyx_cpp] + pyllco_source_files,
     install: true,
     subdir: get_option('prefix') + py_modules,
+    gnu_symbol_visibility: 'default',
     dependencies: [py3_inst.dependency(), llvm_dep]
 )
 
