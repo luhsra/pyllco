@@ -8,7 +8,7 @@ Dependencies
 
 - meson
 - cython
-- LLVM 9/10
+- LLVM (see meson.build for current compatible versions)
 
 Compiling
 ---------
