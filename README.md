@@ -2,6 +2,8 @@ PyLLco
 ======
 
 A Python wrapper for LLVM Constants.
+This wrapper is kind of rudimentary and meant for the subset of LLVM that [ARA](https://github.com/luhsra/ara) needs.
+However, we are open for pull requests.
 
 Dependencies
 ------------
