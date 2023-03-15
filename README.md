@@ -31,4 +31,4 @@ ninja install
 License
 -------
 
-GPLv3
+GPLv3+
