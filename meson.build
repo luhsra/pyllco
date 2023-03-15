@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Gerion Entrup <entrup@sra.uni-hannover.de>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 project('pyllco', 'cpp',
     version: '0.1',
     default_options: ['warning_level=3',
