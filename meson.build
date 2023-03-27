@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2022 Gerion Entrup <entrup@sra.uni-hannover.de>
+# SPDX-FileCopyrightText: 2023 Jan Neugebauer
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -64,11 +65,9 @@ pyllco_pyx_cpp = custom_target('pyllco',
 
 # step 4
 pyllco_source_files = files('pyllco_helper.cpp')
-py_modules = py3_inst.get_path('purelib')
 pyllco = py3_inst.extension_module('pyllco',
     [pyllco_pyx_cpp] + pyllco_source_files,
     install: true,
-    subdir: get_option('prefix') + py_modules,
     gnu_symbol_visibility: 'default',
     dependencies: [py3_inst.dependency(), llvm_dep]
 )
@@ -89,7 +88,7 @@ install_headers(headers, subdir: project_name)
 pkg = import('pkgconfig')
 pkg.generate(pyllco,
     filebase: project_name,
-    install_dir: get_option('libdir') / 'pkgbuild',
+    install_dir: get_option('libdir') / 'pkgconfig',
     subdirs: project_name,
     variables: 'Cython.include=${includedir}' / project_name
 )
