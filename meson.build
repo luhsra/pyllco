@@ -54,7 +54,8 @@ headers = ['attr_kind.pxd',
            'ir.pxd',
            'pyllco.pxd',
            'pyllco_helper.h',
-           'pyllco_helper.pxd']
+           'pyllco_helper.pxd',
+           'adt.pxd']
 
 # step 3
 pyllco_pyx_cpp = custom_target('pyllco',
